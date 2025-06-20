@@ -1,9 +1,22 @@
+server:
+  port: 8083
 spring:
   application:
     name: loyalty-service
   cloud:
     config:
       enabled: false
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register: true
+        enabled: true
+        service-name: loyalty-service
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        health-check-url: http://host.docker.internal:8080/actuator/health
   datasource:
     url: jdbc:mysql://localhost:3306/loyalty_db
     username: root

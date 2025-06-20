@@ -1,0 +1,39 @@
+services:
+  consul:
+    image: hashicorp/consul:1.14
+    container_name: consul
+    ports:
+      - "8500:8500" # HTTP interface for Consul UI and API
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    command: "agent -server -bootstrap-expect=1 -ui -client=0.0.0.0"
+    environment:
+      - CONSUL_LOCAL_CONFIG={"datacenter":"dc1","server":true}
+    networks:
+      - app-network
+    volumes:
+      - consul-data:/consul/data
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0.36
+    container_name: mysql
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  consul-data:
+    driver: local
+  mysql-data:
+    driver: local

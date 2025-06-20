@@ -1,9 +1,22 @@
+server:
+  port: 8085
 spring:
   application:
     name: pet-service
   cloud:
     config:
       enabled: false
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register: true
+        enabled: true
+        service-name: pet-service
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        health-check-url: http://host.docker.internal:8080/actuator/health
   datasource:
     url: jdbc:mysql://localhost:3306/pet_db
     username: root
