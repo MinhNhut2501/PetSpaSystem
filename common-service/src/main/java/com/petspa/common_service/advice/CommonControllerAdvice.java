@@ -1,9 +1,6 @@
 package com.petspa.common_service.advice;
 
-import com.petspa.common_service.exception.ConnectionException;
-import com.petspa.common_service.exception.NotFoundException;
-import com.petspa.common_service.exception.ResourceNotFoundException;
-import com.petspa.common_service.exception.UnknownValueException;
+import com.petspa.common_service.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +74,34 @@ public interface CommonControllerAdvice {
                 .detail(e.getMessage())
                 .instance(URI.create(request.getRequestURI()))
                 .code("CONNECTION_ERROR")
+                .build();
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    default RestError duplicateExceptionHandler(DuplicateException e, HttpServletRequest request) {
+        return RestError.builder()
+                .status(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .type(URI.create("https://problems.affina.com.vn/connection-error"))
+                .title("Duplicate Error")
+                .detail(e.getMessage())
+                .instance(URI.create(request.getRequestURI()))
+                .code("DUPLICATE_ERROR")
+                .build();
+    }
+
+    @ExceptionHandler(ExistException.class)
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    default RestError existExceptionHandler(ExistException e, HttpServletRequest request) {
+        return RestError.builder()
+                .status(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .type(URI.create("https://problems.affina.com.vn/connection-error"))
+                .title("Exist Error")
+                .detail(e.getMessage())
+                .instance(URI.create(request.getRequestURI()))
+                .code("EXIST_ERROR")
                 .build();
     }
 

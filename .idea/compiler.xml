@@ -9,7 +9,19 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
       </profile>
-      <profile name="Annotation profile for booking-service" enabled="true">
+      <profile name="Annotation profile for identity-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
+        </processorPath>
+        <module name="identity-service" />
+        <module name="common-service" />
+      </profile>
+      <profile name="Annotation profile for user-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -20,18 +32,17 @@
         <module name="user-service" />
         <module name="pet-service" />
         <module name="notification-service" />
-        <module name="booking-service" />
         <module name="catalog-service" />
+        <module name="booking-service" />
       </profile>
-      <profile name="Annotation profile for identity-service" enabled="true">
+      <profile name="Annotation profile for search-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="identity-service" />
-        <module name="common-service" />
+        <module name="search-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -45,6 +56,7 @@
       <module name="loyalty-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="pet-service" options="-parameters" />
+      <module name="search-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>
