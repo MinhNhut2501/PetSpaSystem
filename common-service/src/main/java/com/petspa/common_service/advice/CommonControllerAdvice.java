@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.core.NestedExceptionUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -273,22 +271,6 @@ public interface CommonControllerAdvice {
         } else {
             throw new IllegalStateException("Unexpected value: " + exception);
         }
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    default RestError handleDataIntegrityViolationException(DataIntegrityViolationException e,
-                                                            HttpServletRequest request) {
-        log.error("Stack trace of Data Integrity Violation Error", e);
-        return RestError.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .type(URI.create("https://problems.affina.com.vn/data-integrity-violation"))
-                .title("Data Integrity Violation")
-                .detail(NestedExceptionUtils.getMostSpecificCause(e).getMessage())
-                .instance(URI.create(request.getRequestURI()))
-                .code("DATA_INTEGRITY_VIOLATION")
-                .build();
     }
 
     @ExceptionHandler(Exception.class)

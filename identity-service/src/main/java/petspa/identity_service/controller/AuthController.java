@@ -1,5 +1,6 @@
 package petspa.identity_service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<RestResponse<RegisterResponse>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<RestResponse<RegisterResponse>> register(@RequestBody RegisterRequest request) throws JsonProcessingException {
         return ResponseEntity.ok(RestResponse.<RegisterResponse>builder()
                 .code(HttpStatus.OK.value())
                 .data(authService.register(request))

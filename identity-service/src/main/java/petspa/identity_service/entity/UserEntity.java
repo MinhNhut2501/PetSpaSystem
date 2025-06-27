@@ -14,14 +14,17 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column()
+    String fullName;
+
     @Column(unique = true, nullable = false)
-    String username;
+    String email;
 
     @Column(nullable = false)
     String password; // Đã mã hóa bằng Bcrypt

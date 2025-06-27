@@ -16,7 +16,7 @@ spring:
         prefer-ip-address: true
         health-check-path: /actuator/health
         health-check-interval: 10s
-        health-check-url: http://host.docker.internal:8080/actuator/health
+        health-check-url: http://host.docker.internal:8087/actuator/health
   datasource:
     url: jdbc:mysql://localhost:3306/identity_db
     username: root
@@ -29,6 +29,25 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    template:
+      exchange: user-notification-exchange
+      routing-key: user.notification
 jwt:
   secret-key: $2y$12$HUqVeRx/yQGWi92jQi1hjO/S/M1vT9VmiDNTMvw8OC9pmz5RIofwO
 
+user-service:
+    urlCreateUser: http://localhost:8086/user-profile
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json

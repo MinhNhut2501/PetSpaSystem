@@ -16,7 +16,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterResponse {
     Long id;
-    String username;
+    String email;
     boolean enabled;
     private Set<String> roles;
 }
