@@ -1,0 +1,21 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: chat-service
+
+  cloud:
+    config:
+      enabled: false
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register: true
+        enabled: true
+        service-name: chat-service
+        prefer-ip-address: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+        health-check-url: http://host.docker.internal:8089/actuator/health
+
