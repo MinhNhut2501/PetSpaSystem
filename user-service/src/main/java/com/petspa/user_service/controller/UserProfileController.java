@@ -6,10 +6,16 @@ import com.petspa.common_service.dto.RestResponse;
 import com.petspa.user_service.entity.UserProfileEntity;
 import com.petspa.user_service.dto.request.RegisterUserProfileRequest;
 import com.petspa.user_service.service.UserProfileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/user-profile")
@@ -43,6 +49,25 @@ public class UserProfileController {
                 .code(200)
                 .message("Retrieved Successfully")
                 .data(userProfileService.getUserProfileById(id))
+                .build());
+    }
+
+    @GetMapping("/export-virtual")
+    @Operation(summary = "Export user profile Excel", description = "Trả về file Excel (.xlsx)")
+    @ApiResponse(responseCode = "200", description = "Excel file",
+            content = @Content(mediaType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+    public void exportExcelInVirtualThread(HttpServletResponse response) throws InterruptedException {
+        userProfileService.exportExcelInVirtualThread(response);
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Import user Excel", description = "Nhận file Excel (.xlsx) và import vào DB")
+    public ResponseEntity<RestResponse<String>> importUserExcel(@RequestPart("file") MultipartFile file) {
+        userProfileService.importExcel(file);
+        return ResponseEntity.ok(RestResponse.<String>builder()
+                .code(200)
+                .message("Import thành công")
+                .data("OK")
                 .build());
     }
 }

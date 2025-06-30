@@ -22,10 +22,12 @@ import petspa.identity_service.dto.response.AuthResponse;
 import petspa.identity_service.dto.response.ErrorResponse;
 import petspa.identity_service.dto.response.RegisterResponse;
 import petspa.identity_service.entity.UserEntity;
+import petspa.identity_service.entity.VerificationToken;
 import petspa.identity_service.exception.UserProfileException;
 import petspa.identity_service.mapper.UserMapper;
 import petspa.identity_service.repository.UserRepository;
 import petspa.identity_service.service.AuthService;
+import petspa.identity_service.service.VerificationTokenService;
 import petspa.identity_service.utils.JwtUtil;
 
 import java.util.Set;
@@ -39,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final UserProfileClient userProfileClient;
     private final RabbitTemplate rabbitTemplate;
+    private final VerificationTokenService verificationTokenService;
     @Value("${spring.rabbitmq.template.exchange}")
     String exchange;
 
@@ -56,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
                 .fullName(request.getFullName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Set.of("USER"))
-                .enabled(true)
+                .enabled(false)
                 .build();
 
         userRepository.save(userEntity);
@@ -78,10 +81,13 @@ public class AuthServiceImpl implements AuthService {
         int code = root.path("code").asInt();
 
         if(code == 200){
+            VerificationToken verificationToken = verificationTokenService.createTokenForUser(user);
+            String activationLink = "http://localhost:8087/api/auth/verify?token=" + verificationToken.getToken();
             NotificationMessage message = NotificationMessage.builder()
                     .email("sandbox.smtp.mailtrap.io")
-                    .subject("Welcome to PetSpa!")
-                    .content("Your account has been created successfully.")
+                    .subject("Xác minh tài khoản PetSpa")
+                    .fullName(request.getFullName())
+                    .activationLink(activationLink)
                     .build();
             rabbitTemplate.convertAndSend(exchange, routingKey, message);
             return userMapper.toRegisterResponse(user);

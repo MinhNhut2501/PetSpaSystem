@@ -11,5 +11,6 @@ import lombok.experimental.FieldDefaults;
 public class NotificationMessage {
     String email;
     String subject;
-    String content;
+    String fullName;
+    String activationLink;
 }

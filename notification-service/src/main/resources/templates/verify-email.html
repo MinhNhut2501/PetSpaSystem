@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kích hoạt tài khoản</title>
+</head>
+<body>
+<h2>Chào <span th:text="${fullName}">User</span>,</h2>
+<p>Chào mừng bạn đến với <strong>PetSpa</strong>!</p>
+<p>Vui lòng nhấn vào nút bên dưới để kích hoạt tài khoản của bạn:</p>
+<a th:href="${activationLink}" style="background-color:#4CAF50; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">Kích hoạt ngay</a>
+<p>Liên kết này sẽ hết hạn sau 24 giờ.</p>
+<br>
+<p>Trân trọng,<br>Đội ngũ PetSpa</p>
+</body>
+</html>

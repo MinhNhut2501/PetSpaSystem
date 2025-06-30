@@ -16,7 +16,7 @@ public class NotificationListener {
     @RabbitListener(queues = "${spring.rabbitmq.template.default-receive-queue}")
     public void handleNotification(NotificationMessage message) {
         log.info("Received notification for email: {}, subject: {}, content: {}",
-                message.getEmail(), message.getSubject(), message.getContent());
+                message.getEmail(), message.getSubject(), message.getActivationLink());
         emailService.sendEmail(message);
     }
 }

@@ -23,7 +23,11 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/api/auth/register",
-                                "/api/auth/login"
+                                "/actuator/health",
+                                "/api/auth/login",
+                                "/api/auth/verify**",
+                                "/thank-you.html", "/already-activated.html", "/expired.html", "/invalid.html"
+
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
