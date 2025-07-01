@@ -19,3 +19,7 @@ spring:
         health-check-interval: 10s
         health-check-url: http://host.docker.internal:8089/actuator/health
 
+together:
+  api-url: https://api.together.xyz/v1/chat/completions
+  api-key: 08bb0db25e0419a8370ef902a786ac1a5d1599b7a551c04ee69616be154ec0eb
+  model: meta-llama/Llama-3.3-70B-Instruct-Turbo-Free

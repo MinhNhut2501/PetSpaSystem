@@ -20,6 +20,7 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+
       routes:
         - id: booking-service
           uri: http://localhost:8081

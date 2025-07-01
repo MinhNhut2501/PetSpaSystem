@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pet Spa Chat</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #e8f5e9;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #2e7d32;
+    }
+
+    #chatContainer {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 15px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #chatBox {
+      list-style: none;
+      padding: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fdfdfd;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      margin: 8px 0;
+      position: relative;
+      clear: both;
+      word-wrap: break-word;
+    }
+
+    .me {
+      background-color: #d1ffd1;
+      float: right;
+      text-align: right;
+      border-bottom-right-radius: 0;
+    }
+
+    .bot {
+      background-color: #e0e0ff;
+      float: left;
+      text-align: left;
+      border-bottom-left-radius: 0;
+    }
+
+    .timestamp {
+      font-size: 11px;
+      color: #777;
+      margin-top: 3px;
+    }
+
+    .date-separator {
+      text-align: center;
+      color: #555;
+      font-size: 12px;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+
+    #chat-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    #messageInput {
+      flex: 1;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 8px 16px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    select {
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background: #f0f0f0;
+      font-size: 14px;
+    }
+
+    #typingIndicator {
+      font-style: italic;
+      color: #888;
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="chatContainer">
+  <h2>🐾 Pet Spa Chat</h2>
+
+  <label for="receiverId">💬 Người nhận:</label>
+  <select id="receiverId">
+    <option value="admin">👩 Nhân viên spa (admin)</option>
+    <option value="ai-bot">🤖 AI BOT </option>
+  </select>
+
+  <ul id="chatBox"></ul>
+
+  <div id="typingIndicator">🤖 Đang nhập...</div>
+
+  <div id="chat-controls">
+    <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." />
+    <button onclick="sendMessage()">Gửi</button>
+  </div>
+</div>
+
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<script>
+  const senderId = "user1";
+  const socket = io("http://localhost:9092");
+  const chatBox = document.getElementById("chatBox");
+  const typingIndicator = document.getElementById("typingIndicator");
+  let lastMessageDate = "";
+
+  socket.on("connect", () => {
+    console.log("✅ Kết nối thành công:", socket.id);
+  });
+
+  socket.on("chat_response", (msg) => {
+    console.log("📩 Nhận phản hồi:", msg);
+    typingIndicator.style.display = "none";
+    appendMessage(msg.senderId, msg.message, msg.timestamp);
+  });
+
+  function sendMessage() {
+    const input = document.getElementById("messageInput");
+    const message = input.value.trim();
+    if (!message) return;
+
+    const receiverId = document.getElementById("receiverId").value;
+    const timestamp = new Date().toISOString();
+
+    // Hiển thị tin nhắn của mình
+    appendMessage(senderId, message, timestamp);
+
+    // Hiển thị typing nếu gửi cho AI
+    if (receiverId === "ai-bot") {
+      typingIndicator.style.display = "block";
+    }
+
+    // Gửi về server
+    socket.emit("chat_message", {
+      senderId: senderId,
+      receiverId: receiverId,
+      message: message,
+      timestamp: timestamp
+    });
+
+    input.value = "";
+  }
+
+  function appendMessage(sender, message, timestamp) {
+    const date = new Date(timestamp);
+    const dateString = `${String(date.getDate()).padStart(2, '0')}/` +
+                   `${String(date.getMonth() + 1).padStart(2, '0')}/` +
+                   `${date.getFullYear()}`;
+    const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Thêm ngày mới nếu khác ngày
+    if (lastMessageDate !== dateString) {
+      const dateSeparator = document.createElement("div");
+      dateSeparator.className = "date-separator";
+      dateSeparator.innerText = dateString;
+      chatBox.appendChild(dateSeparator);
+      lastMessageDate = dateString;
+    }
+
+    const li = document.createElement("li");
+    li.classList.add("message");
+    const isMe = sender === senderId;
+    li.classList.add(isMe ? "me" : "bot");
+
+    li.innerHTML = `
+      <div>${message}</div>
+      <div class="timestamp">${isMe ? "Tôi" : sender} • ${timeString}</div>
+    `;
+
+    chatBox.appendChild(li);
+    li.scrollIntoView({ behavior: "smooth" });
+  }
+
+  document.getElementById("messageInput").addEventListener("keyup", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+</script>
+
+</body>
+</html>
