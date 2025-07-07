@@ -1,4 +1,4 @@
-package com.petspa.booking_service;
+package com.petspa.booking_service.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;

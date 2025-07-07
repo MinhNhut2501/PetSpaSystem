@@ -7,6 +7,7 @@ import com.petspa.user_service.entity.UserProfileEntity;
 import com.petspa.user_service.dto.request.RegisterUserProfileRequest;
 import com.petspa.user_service.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,8 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/user-profile")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class UserProfileController {
@@ -70,4 +73,17 @@ public class UserProfileController {
                 .data("OK")
                 .build());
     }
+
+    @Operation(summary = "Upload avatar", description = "Upload avatar for user")
+    @PostMapping(path = "/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadAvatar(
+            @PathVariable String userId,
+            @Parameter(description = "Avatar image file", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE))
+            @RequestPart("file") MultipartFile file
+    ) {
+        String avatarUrl = userProfileService.uploadAvatar(file, userId);
+        return ResponseEntity.ok(Map.of("avatarUrl", avatarUrl));
+    }
+
+
 }

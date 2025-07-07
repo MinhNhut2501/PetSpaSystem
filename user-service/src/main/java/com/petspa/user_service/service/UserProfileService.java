@@ -16,4 +16,6 @@ public interface UserProfileService {
 
     void importExcel(MultipartFile file);
 
+    String uploadAvatar(MultipartFile file, String userId);
+
 }

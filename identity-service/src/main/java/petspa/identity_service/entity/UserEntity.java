@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -17,8 +18,7 @@ import java.util.Set;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    String id;
 
     @Column()
     String fullName;
@@ -35,4 +35,11 @@ public class UserEntity {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<String> roles;
+
+    @PrePersist
+    public void ensureId() {
+        if (this.id == null || this.id.isBlank()) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 }

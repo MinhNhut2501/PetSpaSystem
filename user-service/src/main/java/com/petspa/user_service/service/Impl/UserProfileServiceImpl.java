@@ -2,18 +2,22 @@ package com.petspa.user_service.service.Impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.petspa.common_service.exception.ExistException;
+import com.petspa.user_service.config.MinioConfig;
 import com.petspa.user_service.dto.response.UserExcelDTO;
 import com.petspa.user_service.entity.UserProfileEntity;
 import com.petspa.user_service.dto.request.RegisterUserProfileRequest;
 import com.petspa.user_service.mapper.UserProfileMapper;
 import com.petspa.user_service.repository.UserProfileReppository;
 import com.petspa.user_service.service.UserProfileService;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,6 +35,8 @@ import java.util.concurrent.CountDownLatch;
 public class UserProfileServiceImpl implements UserProfileService {
     UserProfileReppository userProfileReppository;
     UserProfileMapper userProfileMapper;
+    MinioClient minioClient;
+    MinioConfig config;
 
     @Override
     public String saveUserProfile(RegisterUserProfileRequest request) {
@@ -123,6 +129,39 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         } catch (IOException e) {
             throw new RuntimeException("Import Excel thất bại", e);
+        }
+    }
+
+    @Override
+    public String uploadAvatar(MultipartFile file, String userId) {
+        try {
+            String fileExt = StringUtils.getFilenameExtension(file.getOriginalFilename());
+            String fileName = "avatar_" + userId + "_" + System.currentTimeMillis() + "." + fileExt;
+
+            InputStream inputStream = file.getInputStream();
+
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(config.getBucket())
+                            .object(fileName)
+                            .stream(inputStream, file.getSize(), -1)
+                            .contentType(file.getContentType())
+                            .build()
+            );
+
+            String avatarUrl = config.getPublicUrl() + "/" + config.getBucket() + "/" + fileName;
+
+            // 🔥 Lưu vào DB
+            Long id = Long.parseLong(userId);
+            userProfileReppository.findById(id).ifPresent(profile -> {
+                profile.setAvatarUrl(avatarUrl);
+                userProfileReppository.save(profile);
+            });
+
+            return avatarUrl;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error uploading avatar", e);
         }
     }
 

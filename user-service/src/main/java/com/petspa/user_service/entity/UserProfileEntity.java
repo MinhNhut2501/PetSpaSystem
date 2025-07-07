@@ -28,4 +28,11 @@ public class UserProfileEntity {
     String address;
     String gender;
     LocalDate birthDate;
+
+    @Column(name = "avatar_url")
+    String avatarUrl;
+
+    public Long getId() {
+        return id;
+    }
 }
