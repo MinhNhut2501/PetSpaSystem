@@ -3,7 +3,6 @@ package com.petspa.booking_service.controller;
 import com.petspa.booking_service.dto.request.CreateBookingRequest;
 import com.petspa.booking_service.dto.request.UpdateBookingStatusRequest;
 import com.petspa.booking_service.dto.response.BookingResponse;
-import com.petspa.booking_service.entity.Booking;
 import com.petspa.booking_service.service.BookingService;
 import com.petspa.common_service.dto.RestResponse;
 import io.swagger.v3.oas.annotations.Operation;

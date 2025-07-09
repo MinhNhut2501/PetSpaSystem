@@ -1,6 +1,5 @@
 package com.petspa.booking_service.service.Impl;
 
-import com.petspa.booking_service.config.BookingDocument;
 import com.petspa.booking_service.config.BookingProducer;
 import com.petspa.booking_service.dto.request.CreateBookingRequest;
 import com.petspa.booking_service.dto.response.BookingResponse;
@@ -10,6 +9,7 @@ import com.petspa.booking_service.enumration.BookingStatus;
 import com.petspa.booking_service.mapper.BookingMapper;
 import com.petspa.booking_service.repository.BookingRepository;
 import com.petspa.booking_service.service.BookingService;
+import com.petspa.common_service.dto.BookingDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +56,7 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
 
         BookingDocument doc = buildBookingDocument(booking);
-        bookingProducer.sendBookingToIndex(doc);
+        bookingProducer.sendCreateOrUpdateMessage(doc);
 
         return bookingMapper.toBookingResponse(booking);
     }
@@ -92,14 +92,14 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         booking.setStatus(BookingStatus.valueOf(status));
         bookingRepository.save(booking);
-        bookingProducer.sendBookingToIndex(buildBookingDocument(booking));
+        bookingProducer.sendCreateOrUpdateMessage(buildBookingDocument(booking));
         return bookingMapper.toBookingResponse(booking);
     }
 
     @Override
     public void deleteBooking(String bookingId) {
         bookingRepository.deleteById(bookingId);
-        bookingProducer.deleteBookingFromIndex(bookingId);
+        bookingProducer.sendDeleteMessage(bookingId);
     }
 
     private BookingDocument buildBookingDocument(Booking booking) {

@@ -15,7 +15,7 @@ public class OpenAPIConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Pet Spa Booking API")
-                        .description("API quản lý đặt lịch và dịch vụ thú cưng")
+                        .description("API quản lý đặt lịch thú cưng")
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("Your Name")
