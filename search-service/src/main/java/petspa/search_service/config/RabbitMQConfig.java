@@ -19,6 +19,26 @@ public class RabbitMQConfig {
     public static final String BOOKING_EXCHANGE = "booking.exchange";
     public static final String BOOKING_ROUTING_KEY = "booking.sync";
     public static final String BOOKING_QUEUE = "booking.elasticsearch.sync";
+    private static final String CATALOG_EXCHANGE = "catalog.exchange";
+    private static final String CATALOG_ROUTING_KEY = "catalog.sync";
+    private static final String CATALOG_QUEUE = "catalog.elasticsearch.sync";
+
+    @Bean
+    public DirectExchange catalogExchange() {
+        return new DirectExchange(CATALOG_EXCHANGE);
+    }
+
+    @Bean
+    public Queue catalogQueue() {
+        return new Queue(CATALOG_QUEUE, true);
+    }
+
+    @Bean
+    public Binding catalogBinding() {
+        return BindingBuilder.bind(catalogQueue())
+                .to(catalogExchange())
+                .with(CATALOG_ROUTING_KEY);
+    }
 
     @Bean
     public DirectExchange bookingExchange() {

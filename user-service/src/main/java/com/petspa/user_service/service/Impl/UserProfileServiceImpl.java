@@ -3,9 +3,9 @@ package com.petspa.user_service.service.Impl;
 import com.alibaba.excel.EasyExcel;
 import com.petspa.common_service.exception.ExistException;
 import com.petspa.user_service.config.MinioConfig;
+import com.petspa.user_service.dto.request.RegisterUserProfileRequest;
 import com.petspa.user_service.dto.response.UserExcelDTO;
 import com.petspa.user_service.entity.UserProfileEntity;
-import com.petspa.user_service.dto.request.RegisterUserProfileRequest;
 import com.petspa.user_service.mapper.UserProfileMapper;
 import com.petspa.user_service.repository.UserProfileReppository;
 import com.petspa.user_service.service.UserProfileService;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
