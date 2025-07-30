@@ -34,11 +34,13 @@ spring:
     password: mysecurepassword123
   data:
     redis:
-      host: redis-16950.c334.asia-southeast2-1.gce.redns.redis-cloud.com
-      port: 16950
-      username: default
-      password: AipQz8HQScYIIA2DW86LABGDQmLY5iVC
+#      host: redis-16950.c334.asia-southeast2-1.gce.redns.redis-cloud.com
+#      port: 16950
+#      username: default
+#      password: AipQz8HQScYIIA2DW86LABGDQmLY5iVC
       timeout: 5000
+      host: localhost
+      port: 6379
 
 booking-service:
   url: http://localhost:8081
