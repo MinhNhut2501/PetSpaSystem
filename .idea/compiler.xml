@@ -73,16 +73,6 @@
         </processorPath>
         <module name="common-service" />
       </profile>
-      <profile name="Annotation profile for pet-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/unknown/spring-boot-configuration-processor-unknown.jar" />
-        </processorPath>
-        <module name="pet-service" />
-        <module name="loyalty-service" />
-      </profile>
       <profile name="Annotation profile for catalog-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -96,6 +86,17 @@
         </processorPath>
         <module name="catalog-service" />
         <module name="booking-service" />
+      </profile>
+      <profile name="Annotation profile for loyalty-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/unknown/spring-boot-configuration-processor-unknown.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" />
+        </processorPath>
+        <module name="pet-service" />
+        <module name="loyalty-service" />
       </profile>
     </annotationProcessing>
   </component>

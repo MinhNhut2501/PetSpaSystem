@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -126,6 +127,20 @@ public class BookingController {
                 RestResponse.<Void>builder()
                         .code(HttpStatus.NO_CONTENT.value())
                         .message("Booking deleted successfully")
+                        .build()
+        );
+    }
+
+    @Operation(summary = "Lấy tổng chi tiêu của từng user trong ngày hôm qua")
+    @ApiResponse(responseCode = "200", description = "Thành công")
+    @GetMapping("/total-spent-yesterday")
+    public ResponseEntity<RestResponse<Map<String, Long>>> getTotalSpentYesterday() {
+        Map<String, Long> result = bookingService.getTotalSpentYesterday();
+        return ResponseEntity.ok(
+                RestResponse.<Map<String, Long>>builder()
+                        .code(HttpStatus.OK.value())
+                        .message("Tổng chi tiêu ngày hôm qua")
+                        .data(result)
                         .build()
         );
     }

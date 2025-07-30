@@ -14,8 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,24 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final BookingProducer bookingProducer;
     private final BookingMapper bookingMapper;
+
+    @Override
+    public Map<String, Long> getTotalSpentYesterday() {
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDateTime start = yesterday.atStartOfDay();
+        LocalDateTime end = yesterday.plusDays(1).atStartOfDay();
+
+        List<Object[]> results = bookingRepository.findTotalSpentByUserYesterday(start, end);
+
+        Map<String, Long> spendingMap = new HashMap<>();
+        for (Object[] row : results) {
+            String userId = (String) row[0];
+            BigDecimal total = (BigDecimal) row[1];
+            spendingMap.put(userId, total.longValue());
+        }
+        return spendingMap;
+
+    }
 
     @Override
     public BookingResponse createBooking(CreateBookingRequest request) {
