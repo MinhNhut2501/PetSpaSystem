@@ -11,6 +11,7 @@ import com.petspa.booking_service.repository.BookingRepository;
 import com.petspa.booking_service.service.BookingService;
 import com.petspa.common_service.dto.BookingDocument;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final BookingProducer bookingProducer;
     private final BookingMapper bookingMapper;
+    private final KafkaTemplate<String, BookingDocument> kafkaTemplate;
 
     @Override
     public Map<String, Long> getTotalSpentYesterday() {
@@ -78,6 +80,7 @@ public class BookingServiceImpl implements BookingService {
 
         BookingDocument doc = buildBookingDocument(booking);
         bookingProducer.sendCreateOrUpdateMessage(doc);
+        kafkaTemplate.send("booking-events", doc);
 
         return bookingMapper.toBookingResponse(booking);
     }
