@@ -26,6 +26,7 @@ public class BookingDocument implements Serializable {
     private LocalDateTime bookingTime;
     private String status;
     private BigDecimal totalAmount;
+    private String traceId;
 
     private List<ServiceItem> services;
 

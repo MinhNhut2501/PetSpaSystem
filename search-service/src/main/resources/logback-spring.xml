@@ -4,14 +4,14 @@
 
     <!-- JSON File Appender -->
     <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/app.json</file>
+        <file>logs/search-service.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.json</fileNamePattern>
+            <fileNamePattern>logs/search-service-%d{yyyy-MM-dd}.json</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
 
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"service":"booking-service"}</customFields>
+            <customFields>{"service":"search-service"}</customFields>
             <includeMdc>true</includeMdc>
         </encoder>
     </appender>

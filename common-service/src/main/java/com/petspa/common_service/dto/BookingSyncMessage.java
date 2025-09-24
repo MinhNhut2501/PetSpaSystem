@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class BookingSyncMessage {
     private String action; // CREATE, UPDATE, DELETE
     private BookingDocument booking; // null nếu action là DELETE
+    private String traceId;
 }
